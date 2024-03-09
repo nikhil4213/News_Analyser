@@ -63,7 +63,7 @@
                         errorMessage.style.display = "none";
                     }
                     
-                    if (urlInput && !urlInput.includes("https") && !urlInput.includes("India Today")) {
+                    if (urlInput && !urlInput.includes("https://") && !urlInput.includes("India Today")) {
                         alert("Please enter a valid URL containing 'https' or 'India Today'.");
                         return false; // Prevent form submission only if URL is provided and does not meet criteria
                     }
