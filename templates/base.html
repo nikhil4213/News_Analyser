@@ -1,0 +1,51 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <navbar>
+            <div class="navbar flex-center">
+                <div class='navbar_logo'>
+                   <img src="/static/img/logo.png"></img>
+                </div>
+                <div class='navbar_items'>
+                   <ul class='flex-center'>
+                     <li><a href="/data">Home</a></li>
+                     <li><a href="/about" >About</a></li>
+                     <li><a href="/contact" >Contact</a></li>
+                   </ul>
+                </div>
+                <div class='navbar_user flex-center'>
+                    {% if not session['user_info'] %}
+                    <p class="flex-center login"><a href="/login"><span>Login with</span><img src="/static/img/google.ico"></a></p>
+                    {% else %}
+                    <p><a href="logout">Logout</a></p>
+                   {% endif %}            
+                   <!-- <p>Log out</p> -->
+                   <div class="vertical_line"></div>
+                   <div class="nav_profile flex-center">
+                    {% if  session['user_info']  %}
+                      <a href="/user" class="flex-center"> <img src="{{ session['user_info']['picture'] }}" alt="User Picture"></a>
+                    {% else %}
+                       <i class="fa fa-user" aria-hidden="true"></i>
+                    {% endif %}
+                   </div>
+                </div>
+             </div>
+        </navbar>
+    </nav>
+    <div class="content newpaper">
+        {% block content %}{% endblock %}
+    </div>
+    <footer class="footer">
+        <p><i class="fa fa-copyright" aria-hidden="true"></i>&nbsp;&nbsp;Copy Right 2024</p>
+    </footer>
+</body>
+</html>

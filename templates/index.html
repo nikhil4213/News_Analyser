@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Data Analyser{% endblock %}
+{% block content %}
+<body>
+    <div class="newpaper">
+            <main class="flex-col">
+                <div class="flex-center">
+                    <div class="news_extractor_content">
+                        <form action="/data" method="POST" onsubmit="return validateUrl()">
+                            <h1>Url Data Analyser 
+                                {% if session['user_info'] %}
+                                <span class="advanced">(Advanced User)</span>
+                                {% endif %}
+                            </h1>
+                            <input type="text" id="Url" name="Url" placeholder="Enter URL...">
+                            <button type="submit" value="Analyze" class="submit_btn">Analyze</button>
+                            <div id="error-message" class="error-message" style="display: none;">Please enter a valid URL.</div>
+                        </form>
+                    </div> 
+                </div>
+                <div class="extracted_content">
+                    <div>
+                        <h3>Analyzed Data ....</h3><hr/>
+                        {% if url %}
+                        <h4>URL</h4>
+                        <p>{{ url }}</p>
+                        <h4>Main Heading</h4>
+                        <p>{{ main_heading }}</p>
+                        <h4>Cleaned Text</h4>
+                        <p>{{ cleaned_text }}</p>
+                        <h4>Number of Words</h4>
+                        <p>{{ num_words }}</p>
+                        <h4>Number of Sentences</h4>
+                        <p>{{ num_sentences }}</p>
+                        {% if not session['user_info'] %}
+                        <button class="submit_btn login"><a href="/login"><span>Login with</span><img src="/static/img/google.ico"> to search for advance data</a></button>
+                        {% else %}
+                        <h3>Ddvanced Data</h3>
+                        <hr/>
+                        <h4>POS Tags</h4>
+                        <p>{{ pos_counts }}</p>
+                        <h4>Keyword frequency</h4>
+                        <p>{{ keywords_frequency }}</p>
+                        <h4>Image count</h4>
+                        <p>{{ image_count }}</p>
+                        <h4>Headings used</h4>
+                        <p>{{ headings_used }}  </p>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </main> 
+            </div>
+        
+            <script>
+                function validateUrl() {
+                    var urlInput = document.getElementById("Url").value;
+                    var errorMessage = document.getElementById("error-message");
+                    if (!urlInput.trim()) {
+                        errorMessage.style.display = "block";
+                        return false;
+                    } else {
+                        errorMessage.style.display = "none";
+                    }
+                    
+                    if (urlInput && !urlInput.includes("https") && !urlInput.includes("India Today")) {
+                        alert("Please enter a valid URL containing 'https' or 'India Today'.");
+                        return false; // Prevent form submission only if URL is provided and does not meet criteria
+                    }
+                    return true; // Allow form submission otherwise
+                }
+            </script>
+    </div>
+</body>
+{% endblock %}
+
+

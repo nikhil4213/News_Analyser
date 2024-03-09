@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}{{ session['user_info']['name'] }}{% endblock %}
+{% block content %}
+<style>
+    .navbar{
+        display: none;
+    }
+    .user_nav{
+        justify-content: space-around;
+        background-color: #a8d2ff;
+        height: 4.5rem;
+        border-radius: 0px;
+        background: #a8d2ff;
+        box-shadow:  3px 3px 6px #bbbbbb,-3px -3px 6px #f1f1f1;
+    }
+    .user_nav div{
+        justify-content: space-between;
+        flex-direction: row;
+        list-style: none;
+    }
+    .username{
+        color: grey;
+    }
+    .home_btn{
+        cursor: pointer;
+        padding: 0.2rem 0.5rem;
+        color: black;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        background-color: #b0d1fa;
+        box-shadow: 3px 3px 8px #b1b1b1, -3px -3px 8px #fff;
+        transition: 0.5s;
+    }
+    .home_btn:hover{
+        background-color: #e2eefd;
+    }
+    .home_btn:active{
+        box-shadow: inset 8px 8px 8px #cbced1, inset -8px -8px 8px #fff
+    }
+    .user_sec{
+        height: 100%;
+        margin: 0 8rem;
+        background-color: #dce7f5;
+        width: unset;
+        margin-top: 2rem;
+    }
+    .user_info{
+        justify-content: flex-start;
+        width: 100%;
+        padding-left: 4rem;
+    }
+    .user_info div{
+        padding-right: 3rem;
+    }
+    img{
+        border-radius: 0.5rem;
+    }
+    .Analysis_history{
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-bottom: 3rem;
+    }
+    .super_user{
+        font-size: 0.7rem;
+        color: gray;
+    }
+    .content_to_hide{
+        display: none;
+    }
+    .active{
+        display: block;
+    }
+    .date{
+        font-size: small;
+        width: fit-content;
+        background-color: #fff;
+        padding: 0.1rem 0.2rem;
+        border-radius: 0.3rem;
+    }
+    .dashboard{
+        background-color: #9effda;
+        border: 1px solid gray;
+        padding-right: 0.8rem;
+        border-radius: 0.3rem;
+    }
+    .dashboard a{
+        text-decoration: none;
+        color: black;
+        font-size: 0.8rem;
+
+
+    }
+    .responsible_in_hideing{
+        cursor: pointer;
+    }
+    .content_to_hide{
+        cursor: pointer;
+    }
+
+</style>
+
+<nav class="flex-center user_nav">
+    <h1>Welcome :<span class="username"> {{ session['user_info']['name'] }}</span></h1>
+    <a href="/data" class="home_btn">Go back to home</a>
+</nav>
+<section class="user_sec extracted_content">
+    <div class="flex-center user_info">
+        <div>
+            <img src="{{ session['user_info']['picture'] }}" alt="User Picture">
+        </div>
+        <div>
+            <p><span>Name : </span>{{ session['user_info']['name'] }}
+            {% if session['user_info']['email'] == 'sanjayasd45@gmail.com' or 'nikhil7618987598@gmail.com'%}
+            <span class="super_user">(Super User)</span>
+            <span class="dashboard"><a href="/dashboard"> &nbsp;&nbsp; Go to Dashboard </a></span>
+            {% endif %}
+
+            </p>
+            <p><span>Email : </span>{{ session['user_info']['email'] }}</p>
+            <p>No. of Analysis made : {{ no_of_analysis }}</p>
+        </div>
+    </div>
+</section>
+<section class="extracted_content user_sec Analysis_history">
+    <div >
+        <h3>Your Analysis History</h3><hr>
+        {% for row in data %}
+        <div class="responsible_in_hideing">
+            <h4>Url</h4>
+            <p><b><span>{{ loop.index }} : </span></b>{{ row[1] }}</p>
+            <p class="date"><span>Date : </span>{{ row[2] }}</p>
+        </div>
+        <div class="content_to_hide">
+            <h4>Main Heading</h4>
+            <p>{{ row[4] }}</p>
+            <h4>Number of Words</h4>
+            <p>{{ row[5] }}</p>
+            <h4>Cleaned Text</h4>
+            <p>{{ row[6] }}</p>
+            <h4>Number of Sentences</h4>
+            <p>{{ row[7] }}</p>
+            <h4>POS Tags</h4>
+            <p>{{ row[8] }}</p>
+            <h4>Keyword frequency</h4>
+            <p>{{ row[9] }}</p>
+            <h4>Image count</h4>
+            <p>{{ row[10] }}</p>
+            <h4>Headings used</h4>
+            <p>{{ row[11] }}</p>
+ 
+        </div>
+        <hr/>
+        {% endfor %}
+    </div>
+
+</section>
+<script>
+    const responsible_in_hideing = document.querySelectorAll('.responsible_in_hideing');
+    const content_to_hide = document.querySelectorAll('.content_to_hide');
+    responsible_in_hideing.forEach(element => {
+        element.addEventListener("click", (e) => {
+            console.log(e);
+            const nextElement = element.nextElementSibling;
+            if (nextElement) {
+                nextElement.classList.toggle("active");
+            }
+        });
+    });
+
+    content_to_hide.forEach(element => {
+        element.addEventListener("click", (e) => {
+            element.classList.remove("active");
+        })
+    })
+</script>
+{% endblock %}

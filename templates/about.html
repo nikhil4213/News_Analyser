@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}About Us{% endblock %}
+{% block content %}
+<style>
+    .extracted_content {
+        width: unset;
+        margin: 2rem 10rem;
+        justify-content: center;
+        align-items: center;
+
+    }
+    .about_content{
+        width: 70%;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<div class="extracted_content flex-col">
+    <div class="about_content">
+        <h1>About Us</h1>
+        <p>Welcome to OurWebsite.com!</p>
+        <h2>Our Mission</h2>
+        <p>Our mission is to provide valuable information and resources to our visitors.</p>
+        <h2>What We Offer</h2>
+        <p>Specially for the <b>Bloggers</b>: Bloggers can use  the Advance Analysis which helps him lots to Know about the Keywords with Frequency , NO of images in that text and Headings used in the article with Tags.</p>
+        <h2>Contact Us</h2>
+        <p>If you have any questions, suggestions, or feedback, please don't hesitate to contact us at <a
+                href="mailto:info@ourwebsite.com">info@ourwebsite.com</a>.</p>
+    </div>
+
+</div>
+
+{% endblock %}

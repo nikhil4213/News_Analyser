@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Contact Details{% endblock %}
+{% block content %}
+    <title></title>
+    <style>
+        .extracted_content{
+            width: unset;
+            margin: 2rem 10rem;
+            justify-content: center;
+            align-items: center;
+            
+        }
+        .extracted_content h1{
+            text-decoration: underline;
+            margin-left: -3rem;
+        }
+        .contact-info{
+            width: unset;
+            justify-content: flex-start;
+        }
+        .key{
+            font-weight: 600;
+            margin-right: 3rem;
+        }
+
+    </style>
+    <div class="extracted_content flex-col">
+        <h1>Contact informetion</h1>
+        <div class="contact-info flex-center">
+            <div class="key">
+                <p>Name : </p>
+                <p>Email : </p>
+                <p>Phone : </p>
+                <p>Address : </p>
+                <p>Instagram : </p>
+                <p>GitHub : </p>
+            </div>
+            <div>
+                <p> Nikhil Verma</p>
+                <p>nikhil7618987598@gmail.com</p>
+                <p>6386930898</p>
+                <p>123 Main St,Lucknow,India</p>
+                <p><a href="https://www.instagram.com/johndoe_insta" target="_blank">@johndoe_insta</a></p>
+                <p><a href="https://github.com/johndoe" target="_blank">johndoe</a></p></p>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+

@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<style>
+        .content_to_hide{
+        display: none;
+    }
+    .active{
+        display: block;
+    }
+    .date{
+        font-size: small;
+        width: fit-content;
+        background-color: #fff;
+        padding: 0.1rem 0.2rem;
+        border-radius: 0.3rem;
+    }
+    .responsible_in_hideing{
+        cursor: pointer;
+    }
+    .content_to_hide{
+        cursor: pointer;
+    }
+    .extracted_content{
+        width: unset;
+        margin: 2rem 10rem;
+        justify-content: flex-start;
+    }
+    .show_more{
+        font-size: 0.8rem;
+        cursor: pointer;
+        background-color: #acd7ff;
+        padding: 0.1rem 0.2rem;
+        border-radius: 0.2rem;
+        display: none;
+        border: 1px solid rgb(76, 103, 255);
+    }
+    .hide{
+        font-size: 0.8rem;
+        cursor: pointer;
+        background-color: #acd7ff;
+        padding: 0.1rem 1rem;
+        border-radius: 0.2rem;
+        display: none;
+        border: 1px solid rgb(76, 103, 255);
+    }
+    .user_data{
+        background-color: #bad2ff;
+        padding: 1px 0.5rem ;
+        border-radius: 0.4rem;
+        line-height: 0.5;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .active{
+        display: block !important;
+    }
+    .active_show{
+        display: inline-block !important;
+    }
+    .closer{
+        display: none;
+    }
+</style>
+<section class="extracted_content user_sec Analysis_history">
+    <div>
+        <h3>User Data &nbsp; <span class="show_more active_show">Show More</span> &nbsp;<span class="hide">Hide</span> </h3><hr>
+        <div class="closer">
+            {% for row in all_user_data %}
+            <div class="user_data">
+                <p> <span>Name : {{ row[1] }}</span> </p>
+                <p> <span>Email : {{ row[2] }}</span> </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</section>
+<section class="extracted_content user_sec Analysis_history" style="margin-bottom: 4rem;">
+    <div>
+        <h3>Total Data</h3><hr>
+        {% for row in data %}
+        <div class="responsible_in_hideing">
+            <h4>Url</h4>
+            <p><b><span>{{ loop.index }} : </span></b>{{ row[1] }}</p>
+            <span class="date"><span>Date : </span>{{ row[2] }} </span> &nbsp; <span class="date">User Email : {{ row[3] }}</span>
+        </div>
+        <div class="content_to_hide">
+            <h4>Main Heading</h4>
+            <p>{{ row[4] }}</p>
+            <h4>Number of Words</h4>
+            <p>{{ row[5] }}</p>
+            <h4>Cleaned Text</h4>
+            <p>{{ row[6] }}</p>
+            <h4>Number of Sentences</h4>
+            <p>{{ row[7] }}</p>
+            <h4>POS Tags</h4>
+            <p>{{ row[8] }}</p>
+            <h4>Keyword frequency</h4>
+            <p>{{ row[9] }}</p>
+            <h4>Image count</h4>
+            <p>{{ row[10] }}</p>
+            <h4>Headings used</h4>
+            <p>{{ row[11] }}</p>
+        </div>
+        <hr/>
+        {% endfor %}
+    </div>
+
+</section>
+<script>
+    const responsible_in_hideing = document.querySelectorAll('.responsible_in_hideing');
+    const content_to_hide = document.querySelectorAll('.content_to_hide');
+    const show_more = document.querySelector('.show_more');
+    const closer = document.querySelector('.closer');
+    responsible_in_hideing.forEach(element => {
+        element.addEventListener("click", (e) => {
+            console.log(e);
+            const nextElement = element.nextElementSibling;
+            if (nextElement) {
+                nextElement.classList.toggle("active");
+            }
+        });
+    });
+
+    content_to_hide.forEach(element => {
+        element.addEventListener("click", (e) => {
+            element.classList.remove("active");
+        })
+    })
+    document.addEventListener("DOMContentLoaded", () => {
+    const show_more = document.querySelector('.show_more');
+    const closer = document.querySelector('.closer');
+    const hide = document.querySelectorAll('.hide');
+    show_more.addEventListener("click", (e) => {
+        hide.forEach(element => {
+            element.classList.toggle("active_show");
+        })
+        show_more.classList.toggle("active_show");
+        closer.classList.toggle("active_show");
+    });
+    hide.forEach(element => {
+        element.addEventListener("click", (e) => {
+            element.classList.toggle("active_show");
+            show_more.classList.toggle("active_show");
+            closer.classList.toggle("active_show");
+        })
+    })
+   });
+
+</script>
+{% endblock %}
