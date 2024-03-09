@@ -149,7 +149,7 @@ db_config = {
 connection = psycopg2.connect(**db_config)
 cursor = connection.cursor()
 
-cursor.execute("CREATE TABLE if not exists  url_data (id SERIAL PRIMARY KEY,url VARCHAR(255),date DATE DEFAULT CURRENT_DATE, email VARCHAR(255) DEFAULT 'example@example.com', main_heading text,num_words INTEGER,clean_text TEXT,num_sentences INTEGER,pos_counts JSONB,keywords_frequency JSONB,image_count INTEGER,headings_used TEXT)")
+cursor.execute("CREATE TABLE if not exists  url_data (id SERIAL PRIMARY KEY,url VARCHAR(255),date DATE DEFAULT CURRENT_DATE, email VARCHAR(255) DEFAULT 'example@example.com', main_heading text,num_words INTEGER,clean_text TEXT,num_sentences INTEGER,pos_counts JSON,keywords_frequency JSON,image_count INTEGER,headings_used JSON)")
 cursor.execute("create table if not exists users (id serial primary key, name varchar(255), email varchar(255))")
 connection.commit()
 
