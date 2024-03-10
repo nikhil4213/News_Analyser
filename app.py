@@ -385,8 +385,8 @@ def portal():
     
     insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
 
-    print(user_info)
-    return render_template("index.html", url=url, cleaned_text=clean_text,
+    if url !=""
+            return render_template("index.html", url=url, cleaned_text=clean_text,
                            num_words=num_words, num_sentences=num_sentences,
                            pos_counts=pos_counts, keywords_frequency=keywords_frequency,
                            image_count=image_count, headings_used=headings_used, user_info = user_info, main_heading = main_heading)
