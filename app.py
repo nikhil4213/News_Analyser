@@ -139,10 +139,10 @@ def profile():
     return redirect(redirect_ur)
 
 db_config = {
-    'dbname': 'postgres',
-    'user': 'postgres',
-    'password': '1234',
-    'host': 'localhost',
+    'dbname': 'dhp2024_eima',
+    'user': 'nikhil',
+    'password': 'R22LAsJJfW1pByje7RTAukpuDFwJM9kX',
+    'host': 'dpg-cnm9jfi1hbls739fjoa0-a',
     'port': '5432'
 }
 
