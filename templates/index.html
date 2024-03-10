@@ -52,7 +52,7 @@
             </main> 
             </div>
         
-            <script>
+<!--             <script>
                 function validateUrl() {
                     var urlInput = document.getElementById("url").value;
                     var errorMessage = document.getElementById("error-message");
@@ -68,6 +68,20 @@
                         return false; // Prevent form submission only if URL is provided and does not meet criteria
                     }
                     return true; // Allow form submission otherwise
+                }
+            </script> -->
+            <script>
+                function validateUrl() {
+                    var urlInput = document.getElementById('Url');
+                    var url = urlInput.value.trim();
+            
+                    if (url === '') {
+                        document.getElementById('error-message').style.display = 'block';
+                        return false;
+                    } else {
+                        document.getElementById('error-message').style.display = 'none';
+                        return true;
+                    }
                 }
             </script>
     </div>
