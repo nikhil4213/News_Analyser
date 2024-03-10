@@ -357,48 +357,48 @@ def portal():
         user_info = session.get('user_info', {})
         if user_info :
             email = user_info['email']
-    def get_main_heading_from_url(url):
-        try:
-            # Fetch the HTML content from the URL
-            response = requests.get(url)
-            
-            # Check if the request was successful
-            if response.status_code == 200:
-                html_content = response.text
+        def get_main_heading_from_url(url):
+            try:
+                # Fetch the HTML content from the URL
+                response = requests.get(url)
                 
-                # Parse the HTML content
-                soup = BeautifulSoup(html_content, 'html.parser')
-                
-                # Extract the main heading
-                main_heading_tag = soup.find('h1')
-                main_heading = main_heading_tag.get_text(strip=True) if main_heading_tag else None
-                
-                return main_heading
-            else:
-                print("Failed to fetch URL:", response.status_code)
+                # Check if the request was successful
+                if response.status_code == 200:
+                    html_content = response.text
+                    
+                    # Parse the HTML content
+                    soup = BeautifulSoup(html_content, 'html.parser')
+                    
+                    # Extract the main heading
+                    main_heading_tag = soup.find('h1')
+                    main_heading = main_heading_tag.get_text(strip=True) if main_heading_tag else None
+                    
+                    return main_heading
+                else:
+                    print("Failed to fetch URL:", response.status_code)
+                    return None
+            except Exception as e:
+                print("An error occurred:", e)
                 return None
-        except Exception as e:
-            print("An error occurred:", e)
-            return None
-    main_heading = get_main_heading_from_url(url)
-    user_info = session.get('user_info', {})
-    
-    # insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
+        main_heading = get_main_heading_from_url(url)
+        user_info = session.get('user_info', {})
+        if url != "":
+            insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
 
    
-    # return render_template("index.html", url=url, cleaned_text=clean_text,
-    #                        num_words=num_words, num_sentences=num_sentences,
-    #                        pos_counts=pos_counts, keywords_frequency=keywords_frequency,
-    #                        image_count=image_count, headings_used=headings_used, user_info = user_info, main_heading = main_heading)
-    if url:
-        return render_template("index.html", url=url, cleaned_text=clean_text,
-                               num_words=num_words, num_sentences=num_sentences,
-                               pos_counts=pos_counts, keywords_frequency=keywords_frequency,
-                               image_count=image_count, headings_used=headings_used, user_info=user_info, main_heading=main_heading)
-    else:
+    return render_template("index.html", url=url, cleaned_text=clean_text,
+                           num_words=num_words, num_sentences=num_sentences,
+                           pos_counts=pos_counts, keywords_frequency=keywords_frequency,
+                           image_count=image_count, headings_used=headings_used, user_info = user_info, main_heading = main_heading)
+    #if url:
+        #return render_template("index.html", url=url, cleaned_text=clean_text,
+                               # num_words=num_words, num_sentences=num_sentences,
+                               # pos_counts=pos_counts, keywords_frequency=keywords_frequency,
+                               # image_count=image_count, headings_used=headings_used, user_info=user_info, main_heading=main_heading)
+   # else:
         # Handle the case when URL is empty, you can redirect or render a different template
         # For example:
-        return render_template("error.html", message="URL is empty")
+        #return render_template("error.html", message="URL is empty")
 
     
 @app.route("/about")
