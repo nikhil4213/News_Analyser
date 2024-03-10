@@ -323,7 +323,7 @@ def portal():
                 pos_counts['Other_pos'] += 1
         
         # Convert pos_counts dictionary to JSON string
-        pos_counts = 
+     
         
         # Extract SEO keywords
         keyword_extractor = yake.KeywordExtractor(lan="en", n=3, dedupLim=0.9, dedupFunc='seqm')
