@@ -17,7 +17,7 @@ from nltk.corpus import stopwords
 import nltk
 import json
 import yake
-url = 'https://www.indiatoday.in/india/story/pm-modi-srinagar-visit-updates-narendra-modi-srinagar-public-rally-projects-launch-2511584-2024-03-07 '
+
 
 import re
 
@@ -170,6 +170,12 @@ def get_all_data_from_table():
             cursor.close()
         if connection:
             connection.close()
+connection = psycopg2.connect(**db_config)
+cursor = connection.cursor()
+
+cursor.execute("CREATE TABLE if not exists  url_data (id SERIAL PRIMARY KEY,url VARCHAR(255),date DATE DEFAULT CURRENT_DATE, email VARCHAR(255) DEFAULT 'example@example.com', main_heading text,num_words INTEGER,clean_text TEXT,num_sentences INTEGER,pos_counts JSON,keywords_frequency JSON,image_count INTEGER,headings_used JSON)")
+cursor.execute("create table if not exists users (id serial primary key, name varchar(255), email varchar(255))")
+connection.commit()
 
 def insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email):
     connection = None  # Initialize connection variable
@@ -181,7 +187,7 @@ def insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_f
         table_name = 'url_data'
         query = f"INSERT INTO {table_name} (url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used, clean_text, main_heading, email ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s , %s)"
 
-        cursor.execute(query, (url, num_words, num_sentences, pos_counts, json.dumps(keywords_frequency), image_count, json.dumps(headings_used),clean_text, main_heading, email))
+        cursor.execute(query, (url, num_words, num_sentences,json.dumps(pos_counts), json.dumps(keywords_frequency), image_count, json.dumps(headings_used),clean_text, main_heading, email))
         connection.commit()
         print("Data inserted successfully.")
 
@@ -317,7 +323,7 @@ def portal():
                 pos_counts['Other_pos'] += 1
         
         # Convert pos_counts dictionary to JSON string
-        pos_counts = json.dumps(pos_counts)
+        pos_counts = 
         
         # Extract SEO keywords
         keyword_extractor = yake.KeywordExtractor(lan="en", n=3, dedupLim=0.9, dedupFunc='seqm')
@@ -371,14 +377,14 @@ def portal():
             return None
     main_heading = get_main_heading_from_url(url)
     user_info = session.get('user_info', {})
-    
-    insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
+    if url != "":
+        insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
 
     print(user_info)
     return render_template("index.html", url=url, cleaned_text=clean_text,
                            num_words=num_words, num_sentences=num_sentences,
                            pos_counts=pos_counts, keywords_frequency=keywords_frequency,
-                           image_count=image_count, headings_used=headings_used, user_info = user_info, main_heading = main_heading)
+                           image_count=image_count, headings_used=headings_used, main_heading = main_heading)
 
     
 @app.route("/about")
