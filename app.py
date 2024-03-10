@@ -35,19 +35,19 @@ oauth = OAuth(app)
 app.secret_key = 'your_secret_key_here'  # Set the secret key
 client_id = '630606159234-p9u62ohjjdoqsngd5pgd7ob2salaivio.apps.googleusercontent.com'
 client_secret = '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'
-redirect_uri = 'http://localhost:5000/loginnew'
+redirect_uri = 'https://news-analyser-tj7b.onrender.com/authorize'
 
 google = oauth.register(
     name='google',
-    client_id='132542805869-5t1iu8gjjrlinlv6m0ubo82q38vfurhf.apps.googleusercontent.com',
-    client_secret='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',
+    client_id='630606159234-p9u62ohjjdoqsngd5pgd7ob2salaivio.apps.googleusercontent.com',
+    client_secret='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',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     authorize_params=None,
     access_token_url='https://accounts.google.com/o/oauth2/token',
     access_token_params=None,
     refresh_token_url=None,
     refresh_token_params=None,
-    redirect_uri='http://127.0.0.1:5000/authorize',
+    redirect_uri='https://news-analyser-tj7b.onrender.com/authorize',
     client_kwargs={'scope': 'openid email profile'},
     jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
 )
