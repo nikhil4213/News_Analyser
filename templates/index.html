@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Data Analyser{% endblock %}
 {% block content %}
+<style>
+    .error-message{
+        margin-top: 0.2rem;
+    }
+</style>
 <body>
     <div class="newpaper">
             <main class="flex-col">
@@ -14,7 +19,6 @@
                             </h1>
                             <input type="text" id="Url" name="Url" placeholder="Enter URL...">
                             <button type="submit" value="Analyze" class="submit_btn">Analyze</button>
-                            <div id="error-message" class="error-message" style="display: none;">Please enter a valid URL.</div>
                         </form>
                     </div> 
                 </div>
@@ -24,7 +28,7 @@
                         {% if url %}
                         <h4>URL</h4>
                         <p>{{ url }}</p>
-                        <h4>Main Heading</h4>
+                        <h4>Article Headline</h4>
                         <p>{{ main_heading }}</p>
                         <h4>Cleaned Text</h4>
                         <p>{{ cleaned_text }}</p>
@@ -35,7 +39,7 @@
                         {% if not session['user_info'] %}
                         <button class="submit_btn login"><a href="/login"><span>Login with</span><img src="/static/img/google.ico"> to search for advance data</a></button>
                         {% else %}
-                        <h3>Ddvanced Data</h3>
+                        <h3>Advanced Data</h3>
                         <hr/>
                         <h4>POS Tags</h4>
                         <p>{{ pos_counts }}</p>
@@ -43,7 +47,7 @@
                         <p>{{ keywords_frequency }}</p>
                         <h4>Image count</h4>
                         <p>{{ image_count }}</p>
-                        <h4>Headings used</h4>
+                        <h4>Headings Useds</h4>
                         <p>{{ headings_used }}  </p>
                         {% endif %}
                         {% endif %}
@@ -52,38 +56,24 @@
             </main> 
             </div>
         
-<!--             <script>
-                function validateUrl() {
-                    var urlInput = document.getElementById("url").value;
-                    var errorMessage = document.getElementById("error-message");
-                    if (!urlInput.trim()) {
-                        errorMessage.style.display = "block";
-                        return false;
-                    } else {
-                        errorMessage.style.display = "none";
-                    }
-                    
-                    if (urlInput && !urlInput.includes("https://") && !urlInput.includes("India Today")) {
-                        alert("Please enter a valid URL containing 'https' or 'India Today'.");
-                        return false; // Prevent form submission only if URL is provided and does not meet criteria
-                    }
-                    return true; // Allow form submission otherwise
-                }
-            </script> -->
             <script>
                 function validateUrl() {
                     var urlInput = document.getElementById('Url');
                     var url = urlInput.value.trim();
             
                     if (url === '') {
-                        document.getElementById('error-message').style.display = 'block';
+                        alert("URL cannot be empty.");
+                        return false;
+                    } else if (!url.startsWith('https://')) {
+                        alert("Please enter a URL starting with 'https://'.");
                         return false;
                     } else {
-                        document.getElementById('error-message').style.display = 'none';
                         return true;
                     }
                 }
             </script>
+            
+            
     </div>
 </body>
 {% endblock %}
