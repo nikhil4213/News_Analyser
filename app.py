@@ -17,13 +17,13 @@ from nltk.corpus import stopwords
 import nltk
 import json
 import yake
-
+url = 'https://www.indiatoday.in/india/story/pm-modi-srinagar-visit-updates-narendra-modi-srinagar-public-rally-projects-launch-2511584-2024-03-07 '
 
 import re
 
 load_dotenv()
 app = Flask(__name__, static_url_path='/static')
-app.secret_key = 'your_secret_key'
+app.secret_key = os.environ.get('SECRET_KEY')
 app.config['PERMANENT_SESSION_LIFETIME'] = 3600*24*7
 
 
@@ -32,27 +32,33 @@ nltk.download('stopwords')
 nltk.download('averaged_perceptron_tagger')
 
 oauth = OAuth(app)
-app.secret_key = 'your_secret_key_here'  # Set the secret key
-client_id = '630606159234-p9u62ohjjdoqsngd5pgd7ob2salaivio.apps.googleusercontent.com'
-client_secret = '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'
-redirect_uri = 'https://news-analyser-tj7b.onrender.com/authorize'
+# app.secret_key = os.environ.get('jahuhskdlfhkahskljdfhkajhsjkldfjasdfkhaskjdhflkaskhdfjakjshdfkjhasjdhfkljhaksd') # Set the secret key
+
+db_config = {
+    'dbname': os.environ.get('DB_NAME'),
+    'user': os.environ.get('USER_NAME'),
+    'password': os.environ.get('PASSWORD'),
+    'host': os.environ.get('HOST'),
+    'port': '5432'
+}
 
 google = oauth.register(
     name='google',
-    client_id='630606159234-p9u62ohjjdoqsngd5pgd7ob2salaivio.apps.googleusercontent.com',
-    client_secret='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',
+    client_id='132542805869-5t1iu8gjjrlinlv6m0ubo82q38vfurhf.apps.googleusercontent.com',
+    client_secret='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',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     authorize_params=None,
     access_token_url='https://accounts.google.com/o/oauth2/token',
     access_token_params=None,
     refresh_token_url=None,
     refresh_token_params=None,
-    redirect_uri='https://news-analyser-tj7b.onrender.com/authorize',
+    # redirect_uri='http://127.0.0.1:5000/authorize',
+    redirect_uri='https://new-extractor.onrender.com/authorize',
     client_kwargs={'scope': 'openid email profile'},
     jwks_uri='https://www.googleapis.com/oauth2/v3/certs',
 )
 
-@app.route('/login')
+@app.route('/login')                
 def login():
     redirect_uri = url_for('authorize', _external=True)
     return google.authorize_redirect(redirect_uri)
@@ -129,22 +135,21 @@ def profile():
                     cursor.close()
                 if connection:
                     connection.close()
-            print(user_info)
     response = make_response('Cookie set')
-    response.set_cookie('my_cookie', value='example_value', max_age=3600)  # Expires after 1 hour (3600 seconds)
-    print(response)
+    response.set_cookie('my_cookie', value='example_value', max_age= 3600 * 24)  # Expires after 1 hour (3600 seconds)
     session['user_info'] = user_info
-    instert_user_data(user_info["name"],user_info["email"])
+    all_user_data = get_all_user_data_from_table()
+    check = False
+    
+    if user_info['email'] in [item[2] for item in all_user_data]:
+        check = True
+    
+    if not check:
+        instert_user_data(user_info["name"], user_info["email"])
+
+
     redirect_ur = "data"
     return redirect(redirect_ur)
-
-db_config = {
-    'dbname': 'dhp2024_eima',
-    'user': 'nikhil',
-    'password': 'R22LAsJJfW1pByje7RTAukpuDFwJM9kX',
-    'host': 'dpg-cnm9jfi1hbls739fjoa0-a',
-    'port': '5432'
-}
 
 
 def get_all_data_from_table():
@@ -170,12 +175,6 @@ def get_all_data_from_table():
             cursor.close()
         if connection:
             connection.close()
-connection = psycopg2.connect(**db_config)
-cursor = connection.cursor()
-
-cursor.execute("CREATE TABLE if not exists  url_data (id SERIAL PRIMARY KEY,url VARCHAR(255),date DATE DEFAULT CURRENT_DATE, email VARCHAR(255) DEFAULT 'example@example.com', main_heading text,num_words INTEGER,clean_text TEXT,num_sentences INTEGER,pos_counts JSON,keywords_frequency JSON,image_count INTEGER,headings_used JSON)")
-cursor.execute("create table if not exists users (id serial primary key, name varchar(255), email varchar(255))")
-connection.commit()
 
 def insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email):
     connection = None  # Initialize connection variable
@@ -187,7 +186,7 @@ def insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_f
         table_name = 'url_data'
         query = f"INSERT INTO {table_name} (url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used, clean_text, main_heading, email ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s , %s)"
 
-        cursor.execute(query, (url, num_words, num_sentences,json.dumps(pos_counts), json.dumps(keywords_frequency), image_count, json.dumps(headings_used),clean_text, main_heading, email))
+        cursor.execute(query, (url, num_words, num_sentences, pos_counts, json.dumps(keywords_frequency), image_count, json.dumps(headings_used),clean_text, main_heading, email))
         connection.commit()
         print("Data inserted successfully.")
 
@@ -271,6 +270,30 @@ def extract_headings(url):
 
     return headings_used
 
+def get_main_heading_from_url(url):
+        try:
+            # Fetch the HTML content from the URL
+            response = requests.get(url)
+            
+            # Check if the request was successful
+            if response.status_code == 200:
+                html_content = response.text
+                
+                # Parse the HTML content
+                soup = BeautifulSoup(html_content, 'html.parser')
+                
+                # Extract the main heading
+                main_heading_tag = soup.find('h1')
+                main_heading = main_heading_tag.get_text(strip=True) if main_heading_tag else None
+                
+                return main_heading
+            else:
+                print("Failed to fetch URL:", response.status_code)
+                return None
+        except Exception as e:
+            print("An error occurred:", e)
+            return None
+
 @app.route("/data", methods=['POST', 'GET'])
 def portal():
     url = ""
@@ -323,7 +346,7 @@ def portal():
                 pos_counts['Other_pos'] += 1
         
         # Convert pos_counts dictionary to JSON string
-     
+        pos_counts = json.dumps(pos_counts)
         
         # Extract SEO keywords
         keyword_extractor = yake.KeywordExtractor(lan="en", n=3, dedupLim=0.9, dedupFunc='seqm')
@@ -352,35 +375,12 @@ def portal():
         user_info = session.get('user_info', {})
         if user_info :
             email = user_info['email']
-    def get_main_heading_from_url(url):
-        try:
-            # Fetch the HTML content from the URL
-            response = requests.get(url)
-            
-            # Check if the request was successful
-            if response.status_code == 200:
-                html_content = response.text
-                
-                # Parse the HTML content
-                soup = BeautifulSoup(html_content, 'html.parser')
-                
-                # Extract the main heading
-                main_heading_tag = soup.find('h1')
-                main_heading = main_heading_tag.get_text(strip=True) if main_heading_tag else None
-                
-                return main_heading
-            else:
-                print("Failed to fetch URL:", response.status_code)
-                return None
-        except Exception as e:
-            print("An error occurred:", e)
-            return None
-    main_heading = get_main_heading_from_url(url)
-    user_info = session.get('user_info', {})
-    if url != "":
-        insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
-
-    print(user_info)
+        main_heading = get_main_heading_from_url(url)
+        user_info = session.get('user_info', {})
+        if clean_text  != '' :
+            insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
+        
+    
     return render_template("index.html", url=url, cleaned_text=clean_text,
                            num_words=num_words, num_sentences=num_sentences,
                            pos_counts=pos_counts, keywords_frequency=keywords_frequency,
@@ -462,13 +462,13 @@ def get_all_user_data_from_table():
 @app.route('/dashboard')
 def dashboard():
     user_info = session.get('user_info', {})
-    if user_info :
-        if user_info['email'] == 'sanjayasd45@gmail.com' :
+    if user_info:
+        if user_info['email'] in ['sanjayasd45@gmail.com', 'Kushal@sitare.org', 'nikhil7618987598@gmail.com']:
             all_url_data = get_all_data_from_table()
             all_user_data = get_all_user_data_from_table()
-            print(all_user_data)
-            return render_template("dashboard.html", data = all_url_data, all_user_data = all_user_data )
+            return render_template("dashboard.html", data=all_url_data, all_user_data=all_user_data)
         msg = 'Your Are Not The Super User'
-        return render_template("dashboard.html", msg = msg)
+        return render_template("error.html", msg = msg)
     return redirect('login')
+
 
