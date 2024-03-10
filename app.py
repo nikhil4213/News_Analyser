@@ -191,7 +191,7 @@ def insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_f
         table_name = 'url_data'
         query = f"INSERT INTO {table_name} (url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used, clean_text, main_heading, email ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s , %s)"
 
-        cursor.execute(query, (url, num_words, num_sentences, pos_counts, json.dumps(keywords_frequency), image_count, json.dumps(headings_used),clean_text, main_heading, email))
+        cursor.execute(query, (url, num_words, num_sentences,json.dumps(pos_counts), json.dumps(keywords_frequency), image_count, json.dumps(headings_used),clean_text, main_heading, email))
         connection.commit()
         print("Data inserted successfully.")
 
@@ -325,9 +325,10 @@ def portal():
                 pos_counts['ADVERB'] += 1
             else:
                 pos_counts['Other_pos'] += 1
+                
         
         # Convert pos_counts dictionary to JSON string
-        pos_counts = json.dumps(pos_counts)
+        #pos_counts = json.dumps(pos_counts)
         
         # Extract SEO keywords
         keyword_extractor = yake.KeywordExtractor(lan="en", n=3, dedupLim=0.9, dedupFunc='seqm')
