@@ -4,6 +4,10 @@ from dotenv import load_dotenv
 from flask import Flask, render_template, request, flash, url_for, redirect,session, jsonify,make_response
 # from flask import Flask , 
 import requests
+import importlib
+module = "math"
+mod = importlib.import_module(module)
+
 from bs4 import BeautifulSoup
 
 import requests
