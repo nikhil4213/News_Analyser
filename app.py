@@ -17,7 +17,7 @@ from nltk.corpus import stopwords
 import nltk
 import json
 import yake
-url = 'https://www.indiatoday.in/india/story/pm-modi-srinagar-visit-updates-narendra-modi-srinagar-public-rally-projects-launch-2511584-2024-03-07 '
+#url = 'https://www.indiatoday.in/india/story/pm-modi-srinagar-visit-updates-narendra-modi-srinagar-public-rally-projects-launch-2511584-2024-03-07 '
 
 import re
 
@@ -383,13 +383,22 @@ def portal():
     main_heading = get_main_heading_from_url(url)
     user_info = session.get('user_info', {})
     
-    insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
+    # insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
 
-    if url !="" :
-            return render_template("index.html", url=url, cleaned_text=clean_text,
-                           num_words=num_words, num_sentences=num_sentences,
-                           pos_counts=pos_counts, keywords_frequency=keywords_frequency,
-                           image_count=image_count, headings_used=headings_used, user_info = user_info, main_heading = main_heading)
+   
+    # return render_template("index.html", url=url, cleaned_text=clean_text,
+    #                        num_words=num_words, num_sentences=num_sentences,
+    #                        pos_counts=pos_counts, keywords_frequency=keywords_frequency,
+    #                        image_count=image_count, headings_used=headings_used, user_info = user_info, main_heading = main_heading)
+    if url:
+        return render_template("index.html", url=url, cleaned_text=clean_text,
+                               num_words=num_words, num_sentences=num_sentences,
+                               pos_counts=pos_counts, keywords_frequency=keywords_frequency,
+                               image_count=image_count, headings_used=headings_used, user_info=user_info, main_heading=main_heading)
+    else:
+        # Handle the case when URL is empty, you can redirect or render a different template
+        # For example:
+        return render_template("error.html", message="URL is empty")
 
     
 @app.route("/about")
