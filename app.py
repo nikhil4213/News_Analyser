@@ -279,6 +279,116 @@ def extract_headings(url):
 
     return headings_used
 
+# @app.route("/data", methods=['POST', 'GET'])
+# def portal():
+#     url = ""
+#     num_words = 0
+#     num_sentences = 0
+#     pos_counts = {}
+#     clean_text = ""
+#     keywords_frequency = {}
+#     image_count = 0
+#     headings_used = {}
+#     main_heading = {}
+#     email = 'nologinuser'
+
+#     if request.method == "POST":
+#         print(request)
+#         url = request.form["Url"]
+#         clean_text = get_clean_text(url)
+#         num_words = len(word_tokenize(clean_text))
+        
+#         # Extract text from URL
+#         response = requests.get(url)
+#         soup = BeautifulSoup(response.text, 'html.parser')
+#         news_content = soup.find_all('div', class_=["news-content", "story-highlights", "description", "story-kicker","container","at_row","_next","clearfix"])
+#         combined_text = ' '.join([element.get_text() for element in news_content])
+        
+#         # Count number of sentences
+#         num_sentences = len(sent_tokenize(combined_text))
+        
+#         # Tokenize words and filter out stopwords
+#         words = word_tokenize(clean_text)
+#         stop_words = set(stopwords.words('english'))
+#         filtered_words = [word for word in words if word.lower() not in stop_words]
+        
+#         # Tag filtered words with parts of speech
+#         pos_tags = nltk.pos_tag(filtered_words)
+#         pos_counts = {'NOUN': 0, 'PRONOUN': 0, 'VERB': 0, 'ADJECTIVE': 0, 'ADVERB': 0, 'Other_pos': 0}
+
+#         for word, pos in pos_tags:
+#             if pos.startswith('N'):  # Noun
+#                 pos_counts['NOUN'] += 1
+#             elif pos.startswith('PR'):  # Pronoun
+#                 pos_counts['PRONOUN'] += 1
+#             elif pos.startswith('V'):  # Verb
+#                 pos_counts['VERB'] += 1
+#             elif pos.startswith('J'):  # Adjective
+#                 pos_counts['ADJECTIVE'] += 1
+#             elif pos.startswith('RB'):  # Adverb
+#                 pos_counts['ADVERB'] += 1
+#             else:
+#                 pos_counts['Other_pos'] += 1
+                
+        
+#         # Convert pos_counts dictionary to JSON string
+#         #pos_counts = json.dumps(pos_counts)
+        
+#         # Extract SEO keywords
+#         keyword_extractor = yake.KeywordExtractor(lan="en", n=3, dedupLim=0.9, dedupFunc='seqm')
+
+#         keywords = keyword_extractor.extract_keywords(clean_text)
+#         keyword_extractor_2 = yake.KeywordExtractor(lan="en", n=2, dedupLim=0.9, dedupFunc='seqm')
+#         keyword_extractor_1 = yake.KeywordExtractor(lan="en", n=1, dedupLim=0.9, dedupFunc='seqm')
+
+#         keywords_2 = keyword_extractor_2.extract_keywords(clean_text)
+#         keywords_1 = keyword_extractor_1.extract_keywords(clean_text)
+
+#         keywords += keywords_2 + keywords_1
+        
+#         # Count frequency of each keyword
+#         for keyword, _ in keywords:
+#             keywords_frequency[keyword] = clean_text.lower().count(keyword.lower())
+
+#         # Sort the keywords by frequency in descending order
+#         keywords_frequency = dict(sorted(keywords_frequency.items(), key=lambda item: item[1], reverse=True))
+        
+#         # Count images in text
+#         image_count = count_images_in_text(url)
+
+#         # Extract headings from URL
+#         headings_used = extract_headings(url)
+#         user_info = session.get('user_info', {})
+#         if user_info :
+#             email = user_info['email']
+#      def get_main_heading_from_url(url):
+#             try:
+#                 # Fetch the HTML content from the URL
+#                 response = requests.get(url)
+                
+#                 # Check if the request was successful
+#                 if response.status_code == 200:
+#                     html_content = response.text
+                    
+#                     # Parse the HTML content
+#                     soup = BeautifulSoup(html_content, 'html.parser')
+                    
+#                     # Extract the main heading
+#                     main_heading_tag = soup.find('h1')
+#                     main_heading = main_heading_tag.get_text(strip=True) if main_heading_tag else None
+                    
+#                     return main_heading
+#                 else:
+#                     print("Failed to fetch URL:", response.status_code)
+#                     return None
+#             except Exception as e:
+#                 print("An error occurred:", e)
+#                 return None
+#         main_heading = get_main_heading_from_url(url)
+#         user_info = session.get('user_info', {})
+#     if url != "":
+#         insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
+
 @app.route("/data", methods=['POST', 'GET'])
 def portal():
     url = ""
@@ -359,9 +469,10 @@ def portal():
         # Extract headings from URL
         headings_used = extract_headings(url)
         user_info = session.get('user_info', {})
-        if user_info :
+        if user_info:
             email = user_info['email']
-     def get_main_heading_from_url(url):
+
+        def get_main_heading_from_url(url):
             try:
                 # Fetch the HTML content from the URL
                 response = requests.get(url)
@@ -384,10 +495,12 @@ def portal():
             except Exception as e:
                 print("An error occurred:", e)
                 return None
+        
         main_heading = get_main_heading_from_url(url)
         user_info = session.get('user_info', {})
+
     if url != "":
-        insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used,clean_text, main_heading, email)
+        insert_data_into_table(url, num_words, num_sentences, pos_counts, keywords_frequency, image_count, headings_used, clean_text, main_heading, email)
 
    
     return render_template("index.html", url=url, cleaned_text=clean_text,
