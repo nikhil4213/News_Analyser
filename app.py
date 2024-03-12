@@ -448,7 +448,7 @@ def get_all_user_data_from_table():
 def dashboard():
     user_info = session.get('user_info', {})  # Retrieve user information from the session, defaulting to an empty dictionary
     if user_info:  # Check if user_info is not empty
-        if user_info['email'] in ['sanjayasd45@gmail.com', 'kushal@sitare.org', 'nikhil7618987598@gmail.com']:
+        if user_info['email'] in ['kushal@sitare.org', 'nikhil7618987598@gmail.com']:
             # Check if the user's email is in the list of super users
             all_url_data = get_all_data_from_table()  # Fetch all URL data from the table
             all_user_data = get_all_user_data_from_table()  # Fetch all user data from the table
